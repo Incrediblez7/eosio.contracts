@@ -95,6 +95,9 @@ namespace eosio {
           */
          [[eosio::action]]
          void close( const name& owner, const symbol& symbol );
+      
+         [[eosio::action]]
+         void refund();
 
          static asset get_supply( const name& token_contract_account, const symbol_code& sym_code )
          {
